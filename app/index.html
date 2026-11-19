@@ -3,20 +3,97 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cover Snap</title>
+<title>Vice City Nights — Cover Art Maker</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23ff2e88'/%3E%3Ctext x='16' y='23' font-family='sans-serif' font-size='18' font-weight='bold' fill='%23fff' text-anchor='middle'%3EV%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="./style.css">
 </head>
 <body>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">VCN</span> Vice City Nights <em>cover art maker</em></div>
+  <div class="topbar-note">Photos never leave your machine &middot; works offline</div>
+</header>
 <main class="app">
-  <section class="controls">
-    <h1>Cover Snap</h1>
-    <p>A photo and a caption, made into a square cover.</p>
-    <label>Photo <input id="photo" type="file" accept="image/*"></label>
-    <label>Caption <input id="caption" type="text" maxlength="40" value="Sunset Heist"></label>
-    <button id="export" type="button">Export PNG 1080 x 1080</button>
-    <p id="status" role="status"></p>
+  <section class="stage" id="stage">
+    <canvas id="cover" width="1080" height="1080" aria-label="Cover preview"></canvas>
+    <p class="stage-hint" id="stageHint">Click a panel to select it, then drag to move the photo inside it. Scroll to zoom.</p>
   </section>
-  <canvas id="cover" width="1080" height="1080" aria-label="The cover"></canvas>
+  <aside class="panel" id="controls">
+    <h1>Make your cover</h1>
+    <p class="lede">One photo, or one per panel. Three steps: load photos, pick a layout, export a PNG.</p>
+
+    <fieldset>
+      <legend>1 &middot; Photos</legend>
+      <div class="photo-slots" id="photoSlots"></div>
+      <div class="row">
+        <label class="file-btn">Add a photo
+          <input id="photoFile" type="file" accept="image/*" multiple>
+        </label>
+        <button id="fillAll" type="button">Fill all panels with photo 1</button>
+      </div>
+      <div class="row">
+        <button id="sampleBoulevard" type="button">Try sample: boulevard</button>
+        <button id="samplePier" type="button">Try sample: pier</button>
+      </div>
+      <p class="tiny">Your photos are read on this machine only. Nothing is uploaded.</p>
+    </fieldset>
+
+    <fieldset>
+      <legend>2 &middot; Layout &amp; grade</legend>
+      <label>Layout
+        <select id="layout">
+          <option value="hero">Hero + three — big photo, three below</option>
+          <option value="grid4">Four panels — 2 &times; 2 grid</option>
+          <option value="nine">Nine panels — poster grid</option>
+          <option value="fullbleed">Full bleed — one photo, big title</option>
+          <option value="tilted">Snapshots — three tilted photos</option>
+          <option value="split">Split — two stories, one night</option>
+        </select>
+      </label>
+      <div class="swatches" id="gradeSwatches" role="group" aria-label="Colour grade"></div>
+      <label class="check"><input id="frameToggle" type="checkbox" checked> White poster frame</label>
+      <label class="check"><input id="grainToggle" type="checkbox" checked> Film grain &amp; vignette</label>
+    </fieldset>
+
+    <fieldset>
+      <legend>3 &middot; Words</legend>
+      <label>Caption (title)
+        <input id="caption" type="text" maxlength="28" value="NEON NIGHTS">
+      </label>
+      <label>Subtitle (script)
+        <input id="subtitle" type="text" maxlength="48" value="one night in the city">
+      </label>
+      <label>Badge ribbon
+        <input id="badge" type="text" maxlength="32" value="EST. 2026 &middot; AFTER DARK">
+      </label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Selected panel</legend>
+      <p class="tiny" id="panelLabel">No panel selected yet — click a panel in the preview.</p>
+      <label>Photo in this panel
+        <select id="panelPhoto"></select>
+      </label>
+      <label>Zoom <span id="zoomVal">100%</span>
+        <input id="zoom" type="range" min="100" max="300" value="100">
+      </label>
+      <div class="row">
+        <button id="centerPhoto" type="button">Centre photo</button>
+        <button id="undoBtn" type="button">Undo</button>
+        <button id="redoBtn" type="button">Redo</button>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>4 &middot; Export PNG</legend>
+      <div class="sizes" role="group" aria-label="Export size">
+        <button type="button" class="size-btn" data-size="1080x1080">1080 &times; 1080<br><span>square</span></button>
+        <button type="button" class="size-btn" data-size="1080x1350">1080 &times; 1350<br><span>portrait</span></button>
+        <button type="button" class="size-btn is-active" data-size="1920x1080">1920 &times; 1080<br><span>landscape</span></button>
+      </div>
+      <button id="export" type="button" class="export-btn">Export PNG</button>
+      <p id="status" role="status"></p>
+    </fieldset>
+  </aside>
 </main>
 <script type="module" src="./src/main.js"></script>
 </body>
